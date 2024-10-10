@@ -70,28 +70,37 @@ void buildVirtualMemory () {
 
 void processNewMemory (int processID) {
     
-    // bool value that becomes true if the RAM had memory free
+    // bool value that becomes true if the allocation was succesful
     bool succesful_alloc = false;
+
+    // Initialises empty RAM index at -1 to indicate that the RAM is full
+    int empty_RAM_index = -1;
 
     // First we check if we have enough space to store it in RAM
     for (int page=0; page < FRAMES; page+=2) {
  
         // Checks if there are any empty pages in RAM and keeps the index in a variable if it does
         if (RAM[page] == NULL) {
-            int empty_RAM_index = page;
-            succesful_alloc = true;
+            empty_RAM_index = page;
             break;
         }
     }
 
-    // Check the first entry of every page to see which ones have already been allocated
-    if (succesful_alloc) {
-        for (int page=0; page < PAGEPERPROCESS; page+=1) {
-            int index = processID*PAGEPERPROCESS*PAGESIZE + page*PAGESIZE;
-            // We use entry again as a temporary pointer to the memory struct
-            memory *entry = vmem[index];
-            if (entry->last_accessed == 0) {
-                int empty_vmem_index = index;
+    // Check the first entry of every page in the process to see which ones have already been allocated
+    // Only does this if the RAM also had free space
+    if (empty_RAM_index != -1) {
+        for (int process=0; process < PROCESSES && !succesful_alloc; process++) {
+            for (int page=0; page < PAGEPERPROCESS && !succesful_alloc; page++) {
+                int index = process*PAGEPERPROCESS*PAGESIZE + page*PAGESIZE;
+                // We use entry again as a temporary pointer to the memory struct
+                    memory *entry = vmem[index];
+
+                // Checks for empty vmem for the process
+                if (entry->last_accessed == 0 && entry->process_id == processID) {
+                    RAM[empty_RAM_index] = entry;
+
+                    succesful_alloc = true;
+                }
             }
         }
     }
