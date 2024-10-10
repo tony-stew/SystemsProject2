@@ -56,8 +56,7 @@ void buildVirtualMemory () {
                 
                 // Use malloc to dynamiclally allocate memory for each entry in the memory struct
                 // Entry is simply a temporary pointer to memory that will later be assigned to the vmem array
-                struct memory *entry = (struct memory *)malloc(sizeof(memory));
-                // memory* entry = (memory*) malloc(sizeof(memory));
+                memory* entry = (memory*) malloc(sizeof(memory));
 
                 // Checks if malloc failed
                 if (entry==NULL) {
