@@ -1,8 +1,3 @@
-//  CITS2002 Project 2 2024
-//  Student1:   24214099   Lucan McDonald
-//  Student2:   24502509   Anthony Stewart
-//  Platform:   Apple
-
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
